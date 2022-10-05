@@ -7,6 +7,8 @@
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
+    <script src="{{ url_for('static', filename='plotly.min.js') }}"></script>
+
     {% if title %}
         <title>CCR App - {{ title }}</title>
     {% else %}
@@ -26,8 +28,52 @@
     </nav>
     <div class="main-container">
         <div class="card side">
+            <h3>Analysis Configuration:</h3>
+            <label for="CCR">CCR Serial Number:</label>
+            <select id="CCR" method="GET" action="/">
+                <option value="{{ccr_sns[0]}}" selected>{{ccr_sns[0]}}</option>
+                {% for sn in ccr_sns[1:] %}
+                    <option value="{{sn}}">{{sn}}</option>
+                {% endfor %}
+            </select>
+            <fieldset>
+                <legend>Select a Unit</legend>
+                <div class="radio-btn-container">
+                    <div>
+                        <input type="radio" id="main" name="CCR" value="main" checked>
+                        <label for="main">Main</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="interface" name="CCR" value="interface">
+                        <label for="interface">Interface</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="expansion" name="CCR" value="expansion">
+                        <label for="expansion">Expansion</label>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Select an RF Path</legend>
+                <div class="list-box-container">
+                    <table border="1">
+                        <tr>
+                            <th>Id</th>
+                            <th>Input Jack</th>
+                            <th>Output Jack</th>
+                        </tr>
+                    </table>
+                </div>
+            </fieldset>
         </div>
         <div class="card plot">
+            <div id="chart"></div>
+            <script type="text/javascript">
+                var graphs = {{graphJson | safe}};
+                var config = {displaylogo: false, responsive: true, modeBarButtonsToAdd: ["hoverCompareCartesian"]}
+                Plotly.setPlotConfig(config)
+                Plotly.newPlot("chart",graphs,{});
+            </script>
         </div>
     </div>
 </body>
