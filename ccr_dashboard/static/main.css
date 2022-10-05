@@ -77,13 +77,16 @@ body {
     color: white;
 }
 
+.site-header {
+    height: 8%;
+}
+
 .navbar {
     padding: 2em 0;
-    height: 8%;
+    height: 100%;
     background-color: var(--cool-grey);
     display: flex;
     align-items: center;
-    justify-content: left;
     box-shadow: 0 3px 5px rgb(0 0 0 / 0.3);
     position: sticky;
     width: 100%;
@@ -188,6 +191,10 @@ body {
 .navbar .radar-logo .circle.ring-3 { --size: 100% }
 .navbar .radar-logo .circle.ring-2 { --size: 66% }
 .navbar .radar-logo .circle.ring-1 { --size: 33% }
+
+.navbar:last-child {
+    margin-left: auto;
+}
 
 @-webkit-keyframes rotate360 {
     from {
