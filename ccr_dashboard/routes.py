@@ -11,10 +11,15 @@ import pandas as pd
 import glob
 import re
 
+from ccr_dashboard.forms import analysisConfigurationForm, settingsForm
+
 
 
 @app.route('/')
-def index():
+@app.route('/dashboard')
+def analyze():
+    analysis_form = analysisConfigurationForm()
+    settings_form = settingsForm()
     unit14 = ccr(14,'LA')
     target_dir = r'C:\\Users\\joshua.outhous\\Documents\\CCR\\Unit 14\\Main\\'
     ccr_unit = 'main'
@@ -30,9 +35,13 @@ def index():
         unit14.add_data(ccr_unit,inputJack,outputJack,data)
     freq = unit14.mainUnit['J2_J4']['Oct 2022'][0]
     mag = unit14.mainUnit['J2_J4']['Oct 2022'][1]
+    
+    freq1 = unit14.mainUnit['J2_J5']['Oct 2022'][0]
+    mag1 = unit14.mainUnit['J2_J5']['Oct 2022'][1]
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=freq, y=mag, line = dict(color='yellow', width=2)))
+    fig.add_trace(go.Scatter(x=freq1, y=mag1, line = dict(color='red', width=2)))
 
     fig.update_layout(plot_bgcolor="black",
                    paper_bgcolor="#363535",
@@ -48,7 +57,5 @@ def index():
     fig.update_yaxes(title=dict(text="Power (dBm)",font=dict(color="white",size=16)),mirror=True,ticks="outside",showline=True,zeroline=False,color="white")
 
     graphJson = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-    
-    ccr_sns = np.linspace(1,80,80,dtype=int)
 
-    return render_template('layout.html',title='Dashboard',graphJson=graphJson,ccr_sns=ccr_sns)
+    return render_template('layout.html',title='Dashboard',graphJson=graphJson,analysis_form=analysis_form,settings_form=settings_form)

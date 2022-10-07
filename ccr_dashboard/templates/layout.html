@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 
     <script src="{{ url_for('static', filename='plotly.min.js') }}"></script>
 
@@ -16,63 +16,56 @@
     {% endif %}
 </head>
 <body>
-    <header class="site-header">
-        <nav class="navbar">
-            <div class="radar-logo">
-                <div class="circle ring-3"></div>
-                <div class="circle ring-2"></div>
-                <div class="circle ring-1"></div>
-                <div class="dot"></div>
-                <div class="pointer"></div>
-            </div>
-            <h1>CCR Data Visualization Tool</h1>
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
-                    <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
-                </svg>
-            </div>
-        </nav>
+    <header class="primary-header">
+        <div class="nav-wrapper">
+            <a class="logo" href="#">
+                <img class="radar-logo" src="{{ url_for('static', filename='images/radar-ppi.svg') }}">
+                <div class="radar-logo pointer"></div>
+                <h1>CCR Data Visualization Tool</h1>
+            </a>
+            <nav class="navbar">
+                <ul role="list" class="nav-list">
+                    <li><a href="#">Analyze</a></li>
+                    <li><a href="#">Database</a></li>
+                    <li><a href="#">Measure</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+            </nav>
+            <button id="settings-btn">
+                <img src="{{ url_for('static', filename='images/gear-solid.svg') }}">
+            </button>
+        </div>
     </header>
     <main>
+        <dialog class="card settings-modal" id="modal">
+            <form method="dialog" action="">
+                {{ analysis_form.hidden_tag() }}
+                <fieldset class="form-group">
+                    <legend><h3>Settings</h3></legend>
+                    <hr class="rounded"><br>
+                    <div class="form-content">
+                        {{ settings_form.submit(class="form-control") }}
+                    </div>
+                </fieldset>
+            </form>
+        </dialog>
         <div class="main-container">
             <div class="card side">
-                <h3>Analysis Configuration:</h3>
-                <label for="CCR">CCR Serial Number:</label>
-                <select id="CCR" method="GET" action="/">
-                    <option value="{{ccr_sns[0]}}" selected>{{ccr_sns[0]}}</option>
-                    {% for sn in ccr_sns[1:] %}
-                        <option value="{{sn}}">{{sn}}</option>
-                    {% endfor %}
-                </select>
-                <fieldset>
-                    <legend>Select a Unit</legend>
-                    <div class="radio-btn-container">
-                        <div>
-                            <input type="radio" id="main" name="CCR" value="main" checked>
-                            <label for="main">Main</label>
+                <form method="POST" action="">
+                    {{ analysis_form.hidden_tag() }}
+                    <fieldset class="form-group">
+                        <legend><h3>Analysis Configuration</h3></legend>
+                        <hr class="rounded"><br>
+                        <div class="form-content">
+                            {{ analysis_form.serial_number.label(class="form-control-label") }}
+                            {{ analysis_form.serial_number(class="form-control") }}
                         </div>
-                        <div>
-                            <input type="radio" id="interface" name="CCR" value="interface">
-                            <label for="interface">Interface</label>
+                        <div class="form-content radio-btn-container">
+                            {{ analysis_form.unit.label(class="form-control-label") }}
+                            {{ analysis_form.unit(class="form-control") }}
                         </div>
-                        <div>
-                            <input type="radio" id="expansion" name="CCR" value="expansion">
-                            <label for="expansion">Expansion</label>
-                        </div>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <legend>Select an RF Path</legend>
-                    <div class="list-box-container">
-                        <table border="1">
-                            <tr>
-                                <th>Id</th>
-                                <th>Input Jack</th>
-                                <th>Output Jack</th>
-                            </tr>
-                        </table>
-                    </div>
-                </fieldset>
+                    </fieldset>
+                </form>
             </div>
             <div class="card plot">
                 <div id="chart"></div>
@@ -85,5 +78,6 @@
             </div>
         </div>
     </main>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
