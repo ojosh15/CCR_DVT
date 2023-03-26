@@ -34,7 +34,7 @@ html:focus-within {
 
 html,
 body {
-    height: 100%;
+    /*height: 100%; */
 }
 
 /* Set core body defaults */
@@ -103,6 +103,7 @@ body {
 .logo h1{
     font-weight: bold;
     font-size: 2rem;
+    white-space: nowrap;
 }
 
 .nav-list {
@@ -215,6 +216,7 @@ body {
     margin: 1rem;
     padding: 0;
     height: calc(100vh - var(--primary-header-height) - (1rem * 2));
+    height: calc(100svh - var(--primary-header-height) - (1rem * 2));
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -255,13 +257,16 @@ form {
 }
 
 .plot {
-    height: 100%;
     flex: 0 1 70%;
     height: 100%
 }
 
 .plot:hover {
     box-shadow: 3px 3px 5px rgb(0 0 0 / 0.3);
+}
+
+#chart {
+    height: 100%
 }
 
 h3 {
