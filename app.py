@@ -1,4 +1,7 @@
-from ccr_dashboard import app
+from CAT import app
+import os
+import webbrowser
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,host='0.0.0.0',port=5000)

@@ -1,5 +1,5 @@
-from flask import render_template, url_for
-from ccr_dashboard import app
+from flask import render_template, url_for, request
+from CAT import app
 import pandas as pd
 import numpy as np
 import json
@@ -9,8 +9,9 @@ import plotly.express as px
 from CCR.ccr import ccr
 import glob
 import re
+import sys
 
-from ccr_dashboard.forms import analysisConfigurationForm, settingsForm
+from CAT.forms import analysisConfigurationForm, settingsForm
 
 
 
@@ -39,16 +40,18 @@ def analyze():
                                  yaxis=dict(title=dict(text="Frequency (MHz)",font=dict(color="white",size=16)),mirror=True,ticks="outside",showline=True,zeroline=False,backgroundcolor='black',color='lightgrey'),
                                  zaxis=dict(title=dict(text="Power (dBm)",font=dict(color="white",size=16)),mirror=True,ticks="outside",showline=True,zeroline=False,backgroundcolor='black',color='lightgrey'),
                                  camera_eye_z=0.75),
+                      autosize=True,
                     plot_bgcolor="black",
                     paper_bgcolor="#363535",
-                    height=650,
                     title=dict(text="Power Vs. Frequency",x=0.5,xanchor="center",yanchor="top",font=dict(color="white",size=24)),
                     font_family="Arial",
-                    margin=dict(l=0, r=0, b=0, t=0),
+                    margin=dict(l=10, r=10, t=10, b=10),
                     legend=dict(yanchor="top",y=0.9,xanchor="right",x=0.99,bgcolor="rgba(0,0,0,0)",font=dict(color="white",size=14)),
                     modebar=dict(add=["togglespikelines","hovercompare","v1hovermode"]),
                     hovermode="closest",
                     hoverlabel=dict(font=dict(color="white",size=12),bgcolor="#363535"))
+    fig.update_yaxes(automargin=True)
+    fig.update_xaxes(automargin=True)
     #fig.update_xaxes(title=dict(text="Items",font=dict(color="white",size=16)),mirror=True,ticks="outside",showline=True,zeroline=False,color="white")
     #fig.update_yaxes(title=dict(text="Frequency (MHz)",font=dict(color="white",size=16)),mirror=True,ticks="outside",showline=True,zeroline=False,color="white")
     #fig.update_zaxes(title=dict(text="Power (dBm)",font=dict(color="white",size=16)),mirror=True,ticks="outside",showline=True,zeroline=False,color="white")
@@ -56,3 +59,14 @@ def analyze():
     graphJson = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     return render_template('layout.html',title='Dashboard',graphJson=graphJson,analysis_form=analysis_form,settings_form=settings_form)
+
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+    
+@app.route('/shutdown', methods=['GET'])
+def shutdown():
+    shutdown_server()
+    return 'Server shutting down...' 
