@@ -15,8 +15,8 @@ from CAT.forms import analysisConfigurationForm, settingsForm
 
 
 
-@app.route('/')
-@app.route('/dashboard')
+@app.route('/', methods=['GET','POST'])
+@app.route('/analyze', methods=['GET','POST'])
 def analyze():
     analysis_form = analysisConfigurationForm()
     settings_form = settingsForm()
@@ -58,7 +58,29 @@ def analyze():
 
     graphJson = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template('layout.html',title='Dashboard',graphJson=graphJson,analysis_form=analysis_form,settings_form=settings_form)
+    return render_template('analyze.html',title='Analyze',graphJson=graphJson,analysis_form=analysis_form,settings_form=settings_form)
+
+
+@app.route('/database')
+def database():
+    analysis_form = analysisConfigurationForm()
+    settings_form = settingsForm()
+    return render_template('database.html',title='Database',analysis_form=analysis_form,settings_form=settings_form)
+
+
+@app.route('/measure')
+def measure():
+    analysis_form = analysisConfigurationForm()
+    settings_form = settingsForm()
+    return render_template('measure.html',title='Database',analysis_form=analysis_form,settings_form=settings_form)
+
+
+@app.route('/about')
+def about():
+    analysis_form = analysisConfigurationForm()
+    settings_form = settingsForm()
+    return render_template('about.html',title='Database',analysis_form=analysis_form,settings_form=settings_form)
+
 
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')

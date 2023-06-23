@@ -7,6 +7,8 @@
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+
     <script src="{{ url_for('static', filename='plotly.min.js') }}"></script>
 
     {% if title %}
@@ -24,11 +26,11 @@
                 <h1>CCR Data Visualization Tool</h1>
             </a>
             <nav class="navbar">
-                <ul role="list" class="nav-list">
-                    <li><a href="#">Analyze</a></li>
-                    <li><a href="#">Database</a></li>
-                    <li><a href="#">Measure</a></li>
-                    <li><a href="#">About</a></li>
+                <ul role="list" class="nav-list" id="nav-list">
+                    <li class="nav-item"><a href="/analyze" class="nav-link">Analyze</a></li>
+                    <li class="nav-item"><a href="/database" class="nav-link">Database</a></li>
+                    <li class="nav-item"><a href="/measure" class="nav-link">Measure</a></li>
+                    <li class="nav-item"><a href="/about" class="nav-link">About</a></li>
                 </ul>
             </nav>
             <button id="settings-btn">
@@ -50,32 +52,7 @@
             </form>
         </dialog>
         <div class="main-container">
-            <div class="card side">
-                <form method="POST" action="">
-                    {{ analysis_form.hidden_tag() }}
-                    <fieldset class="form-group">
-                        <legend><h3>Analysis Configuration</h3></legend>
-                        <hr class="rounded"><br>
-                        <div class="form-content">
-                            {{ analysis_form.serial_number.label(class="form-control-label") }}
-                            {{ analysis_form.serial_number(class="form-control") }}
-                        </div>
-                        <div class="form-content radio-btn-container">
-                            {{ analysis_form.unit.label(class="form-control-label") }}
-                            {{ analysis_form.unit(class="form-control") }}
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-            <div class="card plot">
-                <div id="chart"></div>
-                <script type="text/javascript">
-                    var graphs = {{graphJson | safe}};
-                    var config = {displaylogo: false, responsive: true, modeBarButtonsToAdd: ["hoverCompareCartesian"]}
-                    Plotly.setPlotConfig(config)
-                    Plotly.newPlot("chart",graphs,{});
-                </script>
-            </div>
+            {% block content %}{% endblock %}
         </div>
     </main>
     <script src="{{ url_for('static', filename='main.js') }}"></script>

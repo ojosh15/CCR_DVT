@@ -32,11 +32,6 @@ html:focus-within {
   scroll-behavior: smooth;
 }
 
-html,
-body {
-    /*height: 100%; */
-}
-
 /* Set core body defaults */
 body {
   text-rendering: optimizeSpeed;
@@ -119,11 +114,15 @@ body {
     transition: 0.3s;
 }
 
-.nav-list a:hover,
-.nav-list a:focus {
+.nav-list a:hover {
     border-radius: 100px;
     background-color: rgba(0, 189, 0, 0.8);
     /*color: var(--cool-grey);*/
+}
+
+.active-nav {
+    border-radius: 100px;
+    border: 2px solid rgba(0, 189, 0, 0.8);
 }
 
 .navbar {
@@ -293,7 +292,7 @@ h3 {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 1em;
+    column-gap: 1em;
 }
 
 .form-control {
@@ -307,12 +306,22 @@ h3 {
     opacity: 0.4;
 }
 
-.form-content input[type="radio"], 
-.form-content label {
+.form-content ul * {
     cursor: pointer;
 }
 
+.radio-btn-container li {
+    display: inline-block;
+    white-space: nowrap;
+}
+
 .radio-btn-container {
-    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-around;
+}
+
+.drop-down {
+    cursor: pointer;
+    opacity: 1;
 }
