@@ -1,4 +1,4 @@
-from flask import render_template, url_for, request
+from flask import render_template, url_for, request, flash, redirect
 from CAT import app
 import pandas as pd
 import numpy as np
@@ -11,12 +11,13 @@ import glob
 import re
 import sys
 
-from CAT.forms import analysisConfigurationForm, settingsForm
-
+from CAT import app, db
+from CAT.forms import analysisConfigurationForm, settingsForm, componentForm
+from CAT.models import Component
 
 
 @app.route('/')
-@app.route('/dashboard')
+@app.route('/analyze')
 def analyze():
     analysis_form = analysisConfigurationForm()
     settings_form = settingsForm()
@@ -58,7 +59,7 @@ def analyze():
 
     graphJson = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template('layout.html',title='Dashboard',graphJson=graphJson,analysis_form=analysis_form,settings_form=settings_form)
+    return render_template('analyze.html',title='Analyze',graphJson=graphJson,analysis_form=analysis_form,settings_form=settings_form)
 
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')
@@ -70,3 +71,16 @@ def shutdown_server():
 def shutdown():
     shutdown_server()
     return 'Server shutting down...' 
+
+@app.route('/database', methods=['GET','POST'])
+def database():
+    settings_form = settingsForm()
+    form = componentForm()
+    if form.validate_on_submit():
+        comp = Component(model=form.model.data,comp_type=form.comp_type.data,manufacturer=form.manufacturer.data,active=form.active.data,
+                         source=form.source.data)
+        comp.save()
+        flash('Component has been saved successfully!', 'success')
+        return redirect(url_for('database'))
+        
+    return render_template('database.html',title='Database',form=form,settings_form=settings_form)

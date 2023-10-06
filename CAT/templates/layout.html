@@ -10,9 +10,9 @@
     <script src="{{ url_for('static', filename='plotly.min.js') }}"></script>
 
     {% if title %}
-        <title>CCR App - {{ title }}</title>
+        <title>RF Tool - {{ title }}</title>
     {% else %}
-        <title>CCR App</title>
+        <title>RF Tool</title>
     {% endif %}
 </head>
 <body>
@@ -21,12 +21,12 @@
             <a class="logo" href="#">
                 <img class="radar-logo" src="{{ url_for('static', filename='images/radar-ppi.svg') }}">
                 <div class="radar-logo pointer"></div>
-                <h1>CCR Data Visualization Tool</h1>
+                <h1>DNA40 RF Analysis Tool</h1>
             </a>
             <nav class="navbar">
                 <ul role="list" class="nav-list">
-                    <li><a href="#">Analyze</a></li>
-                    <li><a href="#">Database</a></li>
+                    <li><a href="/analyze">Analyze</a></li>
+                    <li><a href="/database">Database</a></li>
                     <li><a href="#">Measure</a></li>
                     <li><a href="#">About</a></li>
                 </ul>
@@ -39,7 +39,7 @@
     <main>
         <dialog class="card settings-modal" id="modal">
             <form method="dialog" action="">
-                {{ analysis_form.hidden_tag() }}
+                {{ settings_form.hidden_tag() }}
                 <fieldset class="form-group">
                     <legend><h3>Settings</h3></legend>
                     <hr class="rounded"><br>
@@ -50,32 +50,16 @@
             </form>
         </dialog>
         <div class="main-container">
-            <div class="card side">
-                <form method="POST" action="">
-                    {{ analysis_form.hidden_tag() }}
-                    <fieldset class="form-group">
-                        <legend><h3>Analysis Configuration</h3></legend>
-                        <hr class="rounded"><br>
-                        <div class="form-content">
-                            {{ analysis_form.serial_number.label(class="form-control-label") }}
-                            {{ analysis_form.serial_number(class="form-control") }}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class = "alert alert-{{ category }}">
+                            {{ message }}
                         </div>
-                        <div class="form-content radio-btn-container">
-                            {{ analysis_form.unit.label(class="form-control-label") }}
-                            {{ analysis_form.unit(class="form-control") }}
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-            <div class="card plot">
-                <div id="chart"></div>
-                <script type="text/javascript">
-                    var graphs = {{graphJson | safe}};
-                    var config = {displaylogo: false, responsive: true, modeBarButtonsToAdd: ["hoverCompareCartesian"]}
-                    Plotly.setPlotConfig(config)
-                    Plotly.newPlot("chart",graphs,{});
-                </script>
-            </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
         </div>
     </main>
     <script src="{{ url_for('static', filename='main.js') }}"></script>

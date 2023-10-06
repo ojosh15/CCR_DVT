@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="card side">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend><h3>Add/Edit Component(s)</h3></legend>
+            <hr class="rounded"><br>
+            <div class="form-content">
+                {{ form.model.label(class="form-control-label") }}
+                {{ form.model(class="form-control") }}
+            </div>
+            <div class="form-content">
+                {{ form.comp_type.label(class="form-control-label") }}
+                {{ form.comp_type(class="form-control") }}
+            </div>
+            <div class="form-content">
+                {{ form.manufacturer.label(class="form-control-label") }}
+                {{ form.manufacturer(class="form-control") }}
+            </div>
+            <div class="form-content">
+                {{ form.active.label(class="form-control-label") }}
+                {{ form.active(class="form-control") }}
+            </div>
+            <div class="form-content">
+                {{ form.source.label(class="form-control-label") }}
+                {{ form.source(class="form-control") }}
+            </div>
+        </fieldset>
+        <div class="form-content">
+            {{ form.submit }}
+        </div>
+    </form>
+</div>
+<div class="card plot"></div>
+{% endblock content %}

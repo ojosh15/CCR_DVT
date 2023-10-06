@@ -13,3 +13,11 @@ class analysisConfigurationForm(FlaskForm):
     
 class settingsForm(FlaskForm):
     submit = SubmitField('Save Settings')
+    
+class componentForm(FlaskForm):
+    model = StringField('Model:',validators=[DataRequired(), Length(max=50)])
+    comp_type = StringField('Type:',validators=[DataRequired(), Length(max=50)])
+    manufacturer = StringField('Manufacturer:',validators=[DataRequired(), Length(max=50)])
+    active = BooleanField('Active:')
+    source = SelectField('Data Source:',coerce=str,choices=['Measured','Simulated','Manufacturer Provided'])
+    submit = SubmitField('Add Component')
